@@ -1,7 +1,7 @@
 //importation models (pour la base de données)
 const User = require("../models/user");
 
-//va cherhcher la dépendance "bcrypt (hashage du password)
+//va chercher la dépendance "bcrypt (hashage du password)
 const bcrypt = require("bcrypt");
 
 //va chercher la dépendance "jsonwebtoken"
@@ -51,9 +51,10 @@ exports.login = async (req, res) => {
         };
         
         // login validé : email + password = ok
+        //envoie dans la réponse du serveur, du userId et du token d'authentification
         const token = fabToken(email)
         if (controlPassword) {
-            res.status(200).json({userId:user._id, token: token})
+            res.status(200).json({userId:user._id, token: token})// encodage du userId pour la création de nouveaux objets
         }
     } catch(err) {
         console.log(err);
@@ -61,9 +62,9 @@ exports.login = async (req, res) => {
     }
 };
 
-//
+// fonction qui fabrique le token
 fabToken = (email) => {
-    const jwtKey =  process.env.JWT_KEY
-    const token = jwt.sign({email: email}, jwtKey, {expiresIn: "24h"})
+    const jwtKey =  process.env.JWT_KEY;
+    const token = jwt.sign({email: email}, jwtKey, {expiresIn: "24"});
     return token
 };
