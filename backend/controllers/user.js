@@ -44,7 +44,7 @@ exports.login = async (req, res) => {
 			});
 		}
         
-        // Verification du mot de passe
+        // Verification du mot de passe (envoyé par le front)
         const controlPassword = await bcrypt.compare(password, user.password )// Compare les mots de passe
         if (!controlPassword) {
             res.status(403).json({message:"Votre mot de passe est faux"})
@@ -53,7 +53,7 @@ exports.login = async (req, res) => {
         // login validé : email + password = ok
         const token = fabToken(email)
         if (controlPassword) {
-            res.status(200).json({message: "L'utilisateur est bien enregistré dans la base de données"})
+            res.status(200).json({userId:user._id, token: token})
         }
     } catch(err) {
         console.log(err);
