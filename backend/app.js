@@ -1,7 +1,9 @@
 // va cherhcer dotenv dans les dépendances (variable d'environnement)
-require('dotenv').config();
+const dotenv = require("dotenv");
 // Importation de express
 const express = require('express');
+//importation node.js utilitaires pour travailler avec les chemins de fichier et repertoire
+const path = require("path");
 // Creation de l'application express
 const app = express();
 
@@ -28,6 +30,9 @@ app.use("/api/auth", userRoutes);
 
 /************************************* route pour les sauces *****************************************************/
 app.use("/api/sauces", saucesRoutes);
+
+/************************************* route pour les images *****************************************************/
+app.use("/images", express.static(path.join(__dirname, "images" ))); // utilisation de la methode d'express : "static" et de la methode path.join
 
 /****************************** app peut être utilisé dans les autres fichiers ***********************/
 module.exports = app;

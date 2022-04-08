@@ -7,31 +7,34 @@ const bcrypt = require("bcrypt");
 //va chercher la dépendance "jsonwebtoken"
 const jwt = require ('jsonwebtoken');
 
-/***************  Permet l'enregistrement de l'utilisateur  ******************************/
-exports.signup = async (req, res) => {// "exports.signup" permet d'exporter la fonction
-    const email = req.body.email;
-    const password = req.body.password;
+/***************  Permet l'inscription de l'utilisateur dans la base de données(signup)  ******************************/
 
-    const cryptPassword = await hashPassword(password);
-    console.log('password:', password);
-    console.log('cryptPassword:', cryptPassword);
+exports.signup = (req, res, next) => {
+	bcrypt
+	.hash(req.body.password, 10)
+	.then((hash) => {
+		const user = new User({
+			email: req.body.email,
+			password: hash,
+		});
 
-    const user = new User({email, password: cryptPassword});
-
-	//L'utilisateur est sauvegardé et enregistré dans la base de données
-	user
-    .save()
-	.then(() => res.status(201).json({ message: "User's created !" }))// si ok, statut "201 Created", la requête à réussi, et une ressource a été crée
-	.catch((err) => res.status(500).json({message: "User's not created :" + err}))// si erreur statut "500", erreur interne du serveur
+		user// l'utilisateur est envoyé dans la base de données
+        .save()
+		.then(() =>
+			res.status(201).json({ message: "Un utilisateur à bien été crée !!" })
+		)
+		.catch((error) => res.status(400).json({ error }));
+	})
+	.catch((error) => {
+		res.status(500).json({
+			error: error,
+			message: "L'utilisateur n'a pas pu être crée",
+		});
+	});
 };
 
-// fonction qui hash le mot de passe utilisateur
-hashPassword = (password) => {
-    const saltRounds = 10; // l'algorythme de hashage sera éxécuté 10 fois
-    return bcrypt.hash(password, saltRounds)
-};
+/********************** Permet à l'utilisateur de retrouver son comtpe dans la base de données (login)***************************************/ 
 
-/********************** Permet le login de l'utilisateur (login)***************************************/ 
 exports.login = async (req, res) => {
     try {
         const email = req.body.email;
@@ -52,19 +55,13 @@ exports.login = async (req, res) => {
         
         // login validé : email + password = ok
         //envoie dans la réponse du serveur, du userId et du token d'authentification
-        const token = fabToken(email)
-        if (controlPassword) {
-            res.status(200).json({userId:user._id, token: token})// encodage du userId pour la création de nouveaux objets
-        }
-    } catch(err) {
-        console.log(err);
-        res.status(500).json({message: "Nous rencontrons actuellement un soucis au niveau du serveur"})
-    }
-};
-
-// fonction qui fabrique le token
-fabToken = (email) => {
-    const jwtKey =  process.env.JWT_KEY;
-    const token = jwt.sign({email: email}, jwtKey, {expiresIn: "24"});
-    return token
+        res.status(200).json({
+			userId: user._id,
+			token: jwt.sign({ userId: user._id }, `${process.env.JWT_KEY}`, {
+				expiresIn: "24h",
+			}),
+		});
+	} catch {
+		(error) => {return res.status(500).json({ error });};
+	}
 };
