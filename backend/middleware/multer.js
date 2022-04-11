@@ -11,8 +11,6 @@ const MIME_TYPES = {
 	"image/png": "png",
 };
 
-console.log(MIME_TYPES);
-
 // le destination du fichier (repertoire) et générer un nom de fichier unique
 const storage = multer.diskStorage({
     // la destination de stockage du fichier
@@ -29,8 +27,6 @@ const storage = multer.diskStorage({
         cb(null, `${name}_${Date.now()}.${extension}`);
     }
 });
-
-
 
 //exportation de multer
 module.exports = multer({storage}).single("image"); // single autorise l'envoi d'une seule image

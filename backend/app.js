@@ -1,5 +1,6 @@
 // va cherhcer dotenv dans les dépendances (variable d'environnement)
 const dotenv = require("dotenv");
+dotenv.config();
 // Importation de express
 const express = require('express');
 //importation node.js utilitaires pour travailler avec les chemins de fichier et repertoire
@@ -9,6 +10,7 @@ const app = express();
 
 // Va chercher le package CORS (c'est un middleware qui agit entre la requête et la réponse)
 const cors = require("cors");
+
 /************************************** Routes ******************************************************************************/
 //route utilisateur
 const userRoutes = require("./routes/user");

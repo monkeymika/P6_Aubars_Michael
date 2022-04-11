@@ -1,6 +1,7 @@
 // import
 const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv").config();
+const dotenv = require("dotenv")
+dotenv.config();
 
 
 // exportation de la fonction du middleware
@@ -12,7 +13,6 @@ module.exports = (req, res, next) => {
 
 		//decoder le token
 		const decodedToken = jwt.verify(token, `${process.env.JWT_KEY}`);
-        console.log(decodedToken);
 
 		//récupérer le userId à l'intérieur du token decodé
 		const userIdToken = decodedToken.userId;
