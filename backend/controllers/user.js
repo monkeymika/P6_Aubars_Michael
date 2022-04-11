@@ -62,6 +62,6 @@ exports.login = async (req, res) => {
 			}),
 		});
 	} catch {
-		(error) => {return res.status(500).json({ error });};
+		(err) => {return res.status(500).json({ err});};
 	}
 };

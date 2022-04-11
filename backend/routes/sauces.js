@@ -10,6 +10,9 @@ const router = express.Router();
 //importation du controllers/sauces.js
 const saucesController = require("../controllers/sauces");
 
+//importation du controllers/like.js
+const like = require("../controllers/like");
+
 //importation du middleware d'authentification
 const authorize = require("../middleware/authorize");
 
@@ -29,6 +32,9 @@ router.put("/:id", authorize, multer, saucesController.updateSauce);
 
 // effacer la sauce
 router.delete("/:id", authorize, saucesController.deleteSauce);
+
+// systeme de like
+router.post("/:id/like", authorize, like.likeOrDislike);
 
 /************************ export *******************************************************/
 
