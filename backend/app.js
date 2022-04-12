@@ -7,6 +7,8 @@ const express = require('express');
 const path = require("path");
 // Creation de l'application express
 const app = express();
+// Va chercher la dépendance helmet
+const helmet = require("helmet");
 
 // Va chercher le package CORS (c'est un middleware qui agit entre la requête et la réponse)
 const cors = require("cors");
@@ -26,6 +28,8 @@ app.use(cors());
 
 /********************** requetes effectué au format json-(bodyparser est inclus dans la version de express) ***************/
 app.use(express.json());
+/********************** installation de helmet ***************/
+app.use(helmet());
 
 /************************************* route authentification signup/login *****************************************************/
 app.use("/api/auth", userRoutes);
